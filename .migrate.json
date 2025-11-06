@@ -1,0 +1,9 @@
+{
+    "migrations-dir": "migrations",
+    "migrations-table": "pgmigrations",
+    "dir": "migrations",
+    "checkOrder": true,
+    "direction": "up",
+    "verbose": true,
+    "count": 1
+}
