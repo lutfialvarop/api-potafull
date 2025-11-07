@@ -45,15 +45,15 @@ class PotModel {
         return result.rows[0];
     }
 
-    static async update(id, userId, potData) {
-        const { type_pot_id } = potData;
+    static async update(id, userId) {
         const query = `
       UPDATE pots 
-      SET type_pot_id = $1, updated_at = NOW()
-      WHERE id = $2 AND user_id = $3
+      SET user_id = $1, updated_at = NOW()
+      WHERE id = $2
       RETURNING *
     `;
-        const result = await pool.query(query, [type_pot_id, id, userId]);
+        const result = await pool.query(query, [userId, id]);
+
         return result.rows[0];
     }
 

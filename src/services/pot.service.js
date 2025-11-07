@@ -26,33 +26,24 @@ class PotService {
         const ecDiff = Math.abs(conductivity - OPTIMAL.ec) / OPTIMAL.ec;
 
         const totalDiff = phDiff + moistureDiff + nDiff + pDiff + kDiff + ecDiff;
-        const soilHealth = (1 - totalDiff / 6) * 100;
+        const soilHealth = Math.round((1 - totalDiff / 6) * 10000) / 100;
 
         // Ensure soil health is between 0 and 100
         return Math.max(0, Math.min(100, soilHealth));
     }
 
     static async addPot(userId, potData) {
-        const { pot_id, type_pot_id } = potData;
+        const { pot_id } = potData;
 
         // Check if pot_id already exists
         const existingPot = await PotModel.findById(pot_id);
-        if (existingPot) {
+        if (existingPot["user_id"]) {
             throw new Error("Pot ID sudah terdaftar");
         }
 
-        // Check if type_pot exists
-        const typePot = await TypePotModel.findById(type_pot_id);
-        if (!typePot) {
-            throw new Error("Tipe pot tidak ditemukan");
-        }
-
-        // Create pot
-        const pot = await PotModel.create({
-            id: pot_id,
-            user_id: userId,
-            type_pot_id,
-        });
+        // Update pot
+        const pot = await PotModel.update(pot_id, userId);
+        const typePot = await TypePotModel.findById(pot.type_pot_id);
 
         logger.info("Pot added successfully", { potId: pot_id, userId });
 
