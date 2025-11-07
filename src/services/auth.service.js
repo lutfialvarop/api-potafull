@@ -157,8 +157,28 @@ class AuthService {
                 isNewUser,
             };
         } catch (error) {
-            logger.error("Google callback failed", error);
-            throw new Error("Invalid authorization code");
+            logger.error("Google callback failed", error); // Ini sudah bagus, tetap pertahankan
+
+            // Cek jika ini error dari Google (GaxiosError)
+            if (error.response && error.response.data && error.response.data.error) {
+                const googleError = error.response.data.error;
+
+                // 'invalid_grant' adalah error Google untuk 'invalid authorization code'
+                if (googleError === "invalid_grant") {
+                    throw new Error("Invalid or expired authorization code.");
+                }
+
+                // Melempar error spesifik dari Google
+                throw new Error(`Google API Error: ${googleError}`);
+            }
+
+            // Cek jika ini error jaringan (seperti ETIMEDOUT)
+            if (error.code) {
+                throw new Error(`Network Error: ${error.code}`);
+            }
+
+            // Error tidak dikenal
+            throw new Error("An unknown error occurred: " + error.message);
         }
     }
 
