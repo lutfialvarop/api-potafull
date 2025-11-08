@@ -12,6 +12,13 @@ const OPTIMAL = {
     ec: 1.8,
 };
 
+const CONDITION = {
+    SAFE: 67,
+    WARNING: 34,
+    URGENT: 0,
+    MAX: 100,
+};
+
 class PotService {
     // Calculate soil health based on the formula from image
     static calculateSoilHealth(sensorData) {
@@ -30,6 +37,49 @@ class PotService {
 
         // Ensure soil health is between 0 and 100
         return Math.max(0, Math.min(100, soilHealth));
+    }
+
+    static calculateSoilHydration(data) {
+        const { ph, moisture } = data;
+
+        // Formula: ((Current Moisture / Optimal Moisture) + (Optimal pH / Current pH)) × 50%
+        const moistureHydration = moisture / OPTIMAL.moisture;
+        const phHydration = OPTIMAL.ph / ph;
+        const totalHydration = (moistureHydration + phHydration) * 50;
+
+        // Ensure soil hydration is between 0 and 100
+        return Math.max(0, Math.min(100, totalHydration));
+    }
+
+    static async getAllHydrationPots(UserId) {
+        try {
+            const data = await PotModel.findByUserId(UserId);
+
+            const resultHydration = data.map((pot) => {
+                const soilHydration = PotService.calculateSoilHydration(pot);
+
+                if (soilHydration > CONDITION.SAFE && soilHydration <= CONDITION.MAX) {
+                    pot.condition = "SAFE";
+                } else if (soilHydration > CONDITION.WARNING && soilHydration <= CONDITION.SAFE) {
+                    pot.condition = "WARNING";
+                } else if (soilHydration >= CONDITION.URGENT && soilHydration <= CONDITION.WARNING) {
+                    pot.condition = "URGENT";
+                } else {
+                    pot.condition = "DANGER";
+                }
+
+                pot.soil_hydration = soilHydration;
+
+                return pot;
+            });
+
+            resultHydration.sort((a, b) => b.soil_hydration - a.soil_hydration);
+
+            return resultHydration;
+        } catch (error) {
+            logger.error("Error getting hydration pots", { error: error.message });
+            throw error;
+        }
     }
 
     static async addPot(userId, potData) {

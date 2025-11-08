@@ -32,6 +32,18 @@ class PotController {
         }
     }
 
+    static async getAllHydrationPots(req, res) {
+        try {
+            const userId = req.user.id;
+            const pots = await PotService.getAllHydrationPots(userId);
+
+            return ApiResponse.success(res, { pots, total: pots.length }, "Data hidrasi pot berhasil diambil");
+        } catch (error) {
+            logger.error("Get hydration pots error", error);
+            return ApiResponse.error(res, "Gagal mengambil data hidrasi pot", HTTP_STATUS.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // Get all user's pots
     static async getMyPots(req, res) {
         try {

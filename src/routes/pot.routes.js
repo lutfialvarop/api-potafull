@@ -13,6 +13,8 @@ router.get("/types", PotController.getTypePots);
 // Get all user's pots with latest data
 router.get("/", PotController.getMyPots);
 
+router.get("/hydration", PotController.getAllHydrationPots);
+
 // Add new pot
 router.post("/add", PotController.addPot);
 
