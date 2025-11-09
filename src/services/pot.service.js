@@ -66,7 +66,7 @@ class PotService {
                     pot.condition = "URGENT";
                 }
 
-                pot.soil_hydration = soilHydration;
+                pot.soil_hydration = soilHydration || 0;
 
                 return pot;
             });
