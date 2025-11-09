@@ -135,23 +135,31 @@ class PotService {
         // Get latest sensor data
         const latestData = await DetailPotModel.getLatestByPotId(potId);
 
+        const sensorData = {
+            n: 0,
+            p: 0,
+            k: 0,
+            temperature: 0,
+            moisture: 0,
+            ph: 0,
+            salinity: 0,
+            conductivity: 0,
+            water_level: 0,
+            soil_health: 0,
+        };
+
+        if (latestData) {
+            Object.keys(sensorData).forEach((key) => {
+                sensorData[key] = latestData[key];
+            });
+        }
+
         return {
             pot_id: pot.id,
             type_name: pot.type_name,
             max_water: pot.max_water,
-            sensor_data: {
-                n: latestData.n || 0,
-                p: latestData.p || 0,
-                k: latestData.k || 0,
-                temperature: latestData.temperature || 0,
-                moisture: latestData.moisture || 0,
-                ph: latestData.ph || 0,
-                salinity: latestData.salinity || 0,
-                conductivity: latestData.conductivity || 0,
-                water_level: latestData.water_level || 0,
-                soil_health: latestData.soil_health || 0,
-            },
-            timestamp: latestData.created_at || today(),
+            sensor_data: sensorData,
+            timestamp: latestData ? latestData.created_at : today(),
         };
     }
 
