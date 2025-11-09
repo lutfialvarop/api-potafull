@@ -93,6 +93,36 @@ class AuthController {
         }
     }
 
+    static async exchangeGoogleCode(req, res) {
+        // 1. Ambil 'code' dari JSON body
+        const { code } = req.body;
+
+        if (!code) {
+            // --- Gunakan ApiResponse.error ---
+            return ApiResponse.error(res, "Authorization code is required.", HTTP_STATUS.BAD_REQUEST);
+        }
+
+        try {
+            // 2. Panggil Service (tidak berubah)
+            const result = await AuthService.handleGoogleCallback(code);
+
+            // 3. Tentukan status dan pesan berdasarkan hasil
+            const statusCode = result.isNewUser ? HTTP_STATUS.CREATED : HTTP_STATUS.OK; // 201 atau 200
+            const message = result.isNewUser ? "User registered successfully" : "Login successful";
+
+            // --- Gunakan ApiResponse.success ---
+            // 'result' berisi { user, token, isNewUser }
+            return ApiResponse.success(res, result, message, statusCode);
+        } catch (error) {
+            logger.error("Failed to exchange Google code", error);
+
+            // --- Gunakan ApiResponse.error ---
+            // AuthService.handleGoogleCallback akan melempar error dgn pesan yg jelas
+            // (Contoh: "Invalid or expired authorization code.")
+            return ApiResponse.error(res, error.message || "Internal server error", HTTP_STATUS.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     static async getProfile(req, res) {
         try {
             return ApiResponse.success(res, { user: req.user }, "Profil berhasil diambil");
