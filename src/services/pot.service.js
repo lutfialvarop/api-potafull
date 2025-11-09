@@ -62,10 +62,8 @@ class PotService {
                     pot.condition = "SAFE";
                 } else if (soilHydration > CONDITION.WARNING && soilHydration <= CONDITION.SAFE) {
                     pot.condition = "WARNING";
-                } else if (soilHydration >= CONDITION.URGENT && soilHydration <= CONDITION.WARNING) {
-                    pot.condition = "URGENT";
                 } else {
-                    pot.condition = "DANGER";
+                    pot.condition = "URGENT";
                 }
 
                 pot.soil_hydration = soilHydration;
