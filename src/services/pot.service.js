@@ -116,8 +116,8 @@ class PotService {
                     pot_id: pot.id,
                     type_name: pot.type_name,
                     max_water: pot.max_water,
-                    soil_health: latestData ? latestData.soil_health : null,
-                    last_update: latestData ? latestData.created_at : null,
+                    soil_health: latestData ? latestData.soil_health : 0,
+                    last_update: latestData ? latestData.created_at : today(),
                 };
             })
         );
@@ -134,27 +134,24 @@ class PotService {
 
         // Get latest sensor data
         const latestData = await DetailPotModel.getLatestByPotId(potId);
-        if (!latestData) {
-            throw new Error("Belum ada data sensor untuk pot ini");
-        }
 
         return {
             pot_id: pot.id,
             type_name: pot.type_name,
             max_water: pot.max_water,
             sensor_data: {
-                n: latestData.n,
-                p: latestData.p,
-                k: latestData.k,
-                temperature: latestData.temperature,
-                moisture: latestData.moisture,
-                ph: latestData.ph,
-                salinity: latestData.salinity,
-                conductivity: latestData.conductivity,
-                water_level: latestData.water_level,
-                soil_health: latestData.soil_health,
+                n: latestData.n || 0,
+                p: latestData.p || 0,
+                k: latestData.k || 0,
+                temperature: latestData.temperature || 0,
+                moisture: latestData.moisture || 0,
+                ph: latestData.ph || 0,
+                salinity: latestData.salinity || 0,
+                conductivity: latestData.conductivity || 0,
+                water_level: latestData.water_level || 0,
+                soil_health: latestData.soil_health || 0,
             },
-            timestamp: latestData.created_at,
+            timestamp: latestData.created_at || today(),
         };
     }
 
