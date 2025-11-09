@@ -117,7 +117,7 @@ class PotService {
                     type_name: pot.type_name,
                     max_water: pot.max_water,
                     soil_health: latestData ? latestData.soil_health : 0,
-                    last_update: latestData ? latestData.created_at : today(),
+                    last_update: latestData ? latestData.created_at : new Date(),
                 };
             })
         );
@@ -159,7 +159,7 @@ class PotService {
             type_name: pot.type_name,
             max_water: pot.max_water,
             sensor_data: sensorData,
-            timestamp: latestData ? latestData.created_at : today(),
+            timestamp: latestData ? latestData.created_at : new Date(),
         };
     }
 
