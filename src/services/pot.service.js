@@ -85,7 +85,7 @@ class PotService {
 
         // Check if pot_id already exists
         const existingPot = await PotModel.findById(pot_id);
-        if (!existingPot["type_pot_id"]) {
+        if (!existingPot) {
             throw new Error("Pot ID tidak ditemukan");
         }
 
