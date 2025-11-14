@@ -91,6 +91,10 @@ class PotService {
 
         // Update pot
         const pot = await PotModel.update(pot_id, userId);
+        if (!pot) {
+            throw new Error("Gagal menambahkan pot. Pastikan Pot ID benar.");
+        }
+
         const typePot = await TypePotModel.findById(pot.type_pot_id);
 
         logger.info("Pot added successfully", { potId: pot_id, userId });
