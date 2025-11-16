@@ -2,7 +2,7 @@
     {
         "relation": ["delegate_permission/common.handle_all_urls"],
         "target": {
-            "namespace": "Potafull",
+            "namespace": "android_app",
             "package_name": "id.hanifalfaqih.potaful",
             "sha256_cert_fingerprints": ["ED:68:66:6A:57:63:38:2E:53:BE:A0:6C:19:26:5A:3C:5C:29:85:33:2C:D2:E6:62:88:39:44:01:76:D8:0C:2F"]
         }
