@@ -93,7 +93,7 @@ class PotController {
         } catch (error) {
             logger.error("Watering control error", error);
 
-            if (error.message.includes("tidak ditemukan") || error.message.includes("bukan milik")) {
+            if (error.message.includes("tidak ditemukan") || error.message.includes("bukan milik") || error.message.includes("Gagal")) {
                 return ApiResponse.error(res, error.message, HTTP_STATUS.NOT_FOUND);
             }
 
