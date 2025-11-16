@@ -126,6 +126,7 @@ class PotService {
                 return {
                     pot_id: pot.id,
                     type_name: pot.type_name,
+                    water_level: latestData ? latestData.water_level : 0,
                     max_water: pot.max_water,
                     soil_health: latestData ? latestData.soil_health : 0,
                     last_update: latestData ? latestData.created_at : new Date(),
