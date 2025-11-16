@@ -112,7 +112,7 @@ class AuthService {
             });
 
             const payload = ticket.getPayload();
-            const { sub: googleId, email, given_name, family_name } = payload;
+            const { sub: googleId, email, given_name, family_name, picture } = payload;
 
             // Check if user exists by Google ID
             let user = await UserModel.findByGoogleId(googleId);
@@ -133,6 +133,7 @@ class AuthService {
                     password: null,
                     auth_type: "google",
                     google_id: googleId,
+                    url_photo: picture || null,
                 });
 
                 isNewUser = true;
@@ -152,6 +153,7 @@ class AuthService {
                     first_name: user.first_name,
                     last_name: user.last_name,
                     email: user.email,
+                    url_photo: user.url_photo || null,
                 },
                 token,
                 isNewUser,
