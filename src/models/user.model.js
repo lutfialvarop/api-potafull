@@ -30,7 +30,7 @@ class UserModel {
     }
 
     static async findById(id) {
-        const query = "SELECT id, first_name, last_name, email, created_at, updated_at FROM users WHERE id = $1";
+        const query = "SELECT id, first_name, last_name, email, url_photo, created_at, updated_at FROM users WHERE id = $1";
         const result = await pool.query(query, [id]);
         return result.rows[0];
     }
