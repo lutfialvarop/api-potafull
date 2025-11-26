@@ -56,6 +56,14 @@ class PotService {
             const data = await PotModel.findByUserId(UserId);
 
             const resultHydration = data.map((pot) => {
+                const latestData = DetailPotModel.getLatestByPotId(pot.id);
+
+                if (latestData) {
+                    pot = { ...pot, ...latestData };
+                } else {
+                    pot = { ...pot, moisture: 0, ph: 0 };
+                }
+
                 const soilHydration = PotService.calculateSoilHydration(pot);
 
                 if (soilHydration > CONDITION.SAFE && soilHydration <= CONDITION.MAX) {
