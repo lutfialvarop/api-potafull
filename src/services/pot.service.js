@@ -206,7 +206,7 @@ class PotService {
 
             // Publish using the client's publish method with Promise
             await new Promise((resolve, reject) => {
-                mqttClient.client.publish(topic, JSON.stringify(message), { qos: 2 }, (error) => {
+                mqttClient.publish(topic, JSON.stringify(message), { qos: 2 }, (error) => {
                     if (error) reject(error);
                     else resolve();
                 });
