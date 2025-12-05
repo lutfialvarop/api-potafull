@@ -1,4 +1,5 @@
 const { PotModel, DetailPotModel, TypePotModel } = require("../models/pot.model");
+const mqttClient = require("../config/mqtt");
 const logger = require("../utils/logger");
 
 // Optimal parameters for soil health calculation
@@ -188,10 +189,7 @@ class PotService {
     static async wateringControl(userId, potId) {
         try {
             // Check if pot belongs to user
-            const pot_id = await TypePotModel.findById(potId);
-            console.log(pot_id);
-            const pot = await PotModel.findByIdAndUserId(pot_id.pot_id, userId);
-            console.log(pot, potId, userId);
+            const pot = await PotModel.findByIdAndUserId(potId, userId);
             if (!pot) {
                 throw new Error("Pot tidak ditemukan atau bukan milik Anda");
             }
@@ -200,17 +198,14 @@ class PotService {
             const topic = `potafull/${potId}/control`;
             const message = { watering: "ON" };
 
-            // Get MQTT client instance
-            const mqtt = require("../config/mqtt");
-
             // Ensure client is connected
-            if (!mqtt.isConnected) {
+            if (!mqttClient.isConnected) {
                 throw new Error("MQTT client is not connected");
             }
 
             // Publish using the client's publish method with Promise
             await new Promise((resolve, reject) => {
-                mqtt.client.publish(topic, JSON.stringify(message), { qos: 2 }, (error) => {
+                mqttClient.client.publish(topic, JSON.stringify(message), { qos: 2 }, (error) => {
                     if (error) reject(error);
                     else resolve();
                 });
