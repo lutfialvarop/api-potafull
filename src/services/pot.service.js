@@ -205,12 +205,7 @@ class PotService {
             }
 
             // Publish using the client's publish method with Promise
-            await new Promise((resolve, reject) => {
-                mqttClient.publish(topic, JSON.stringify(message), { qos: 2 }, (error) => {
-                    if (error) reject(error);
-                    else resolve();
-                });
-            });
+            await mqttClient.publish(topic, message, { qos: 2 });
 
             logger.info("Watering control published", { userId, potId });
 
