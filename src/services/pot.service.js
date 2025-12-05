@@ -55,29 +55,32 @@ class PotService {
         try {
             const data = await PotModel.findByUserId(UserId);
 
-            const resultHydration = data.map((pot) => {
-                const latestData = DetailPotModel.getLatestByPotId(pot.id);
+            const resultHydration = await Promise.all(
+                data.map(async (pot) => {
+                    const latestData = await DetailPotModel.getLatestByPotId(pot.id);
 
-                if (latestData) {
-                    pot = { ...pot, ...latestData };
-                } else {
-                    pot = { ...pot, moisture: 0, ph: 0 };
-                }
+                    console.log(latestData);
+                    if (latestData) {
+                        pot = { ...pot, ...latestData };
+                    } else {
+                        pot = { ...pot, moisture: 0, ph: 0 };
+                    }
 
-                const soilHydration = PotService.calculateSoilHydration(pot);
+                    const soilHydration = PotService.calculateSoilHydration(pot);
 
-                if (soilHydration > CONDITION.SAFE && soilHydration <= CONDITION.MAX) {
-                    pot.condition = "SAFE";
-                } else if (soilHydration > CONDITION.WARNING && soilHydration <= CONDITION.SAFE) {
-                    pot.condition = "WARNING";
-                } else {
-                    pot.condition = "URGENT";
-                }
+                    if (soilHydration > CONDITION.SAFE && soilHydration <= CONDITION.MAX) {
+                        pot.condition = "SAFE";
+                    } else if (soilHydration > CONDITION.WARNING && soilHydration <= CONDITION.SAFE) {
+                        pot.condition = "WARNING";
+                    } else {
+                        pot.condition = "URGENT";
+                    }
 
-                pot.soil_hydration = soilHydration || 0;
+                    pot.soil_hydration = soilHydration || 0;
 
-                return pot;
-            });
+                    return pot;
+                })
+            );
 
             resultHydration.sort((a, b) => b.soil_hydration - a.soil_hydration);
 
