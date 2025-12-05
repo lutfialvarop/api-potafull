@@ -189,6 +189,11 @@ class PotService {
     static async wateringControl(userId, potId) {
         try {
             // Check if pot belongs to user
+            console.log(potId);
+            if (!potId) {
+                throw new Error("Pot ID is required.");
+            }
+
             const pot = await PotModel.findByIdAndUserId(potId, userId);
             if (!pot) {
                 throw new Error("Pot tidak ditemukan atau bukan milik Anda");
@@ -227,11 +232,6 @@ class PotService {
     static async saveSensorData(potId, sensorData) {
         try {
             // Check if pot exists
-            console.log(potId);
-            if (!potId) {
-                throw new Error("Pot ID is required.");
-            }
-
             const pot = await PotModel.findById(potId);
             if (!pot) {
                 logger.warn("Pot not found, ignoring data", { potId });
