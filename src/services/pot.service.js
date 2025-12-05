@@ -77,6 +77,7 @@ class PotService {
                     }
 
                     pot.soil_hydration = parseFloat((soilHydration || 0).toFixed(2));
+                    pot.id = pot.pot_id;
 
                     return pot;
                 })
