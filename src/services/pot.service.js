@@ -76,7 +76,7 @@ class PotService {
                         pot.condition = "URGENT";
                     }
 
-                    pot.soil_hydration = soilHydration || 0;
+                    pot.soil_hydration = parseFloat((soilHydration || 0).toFixed(2));
 
                     return pot;
                 })
@@ -198,17 +198,14 @@ class PotService {
             const topic = `potafull/${potId}/control`;
             const message = { watering: "ON" };
 
-            // Get MQTT client instance
-            const mqtt = require("../config/mqtt");
-
             // Ensure client is connected
-            if (!mqtt.isConnected) {
+            if (!mqttClient.isConnected) {
                 throw new Error("MQTT client is not connected");
             }
 
             // Publish using the client's publish method with Promise
             await new Promise((resolve, reject) => {
-                mqtt.client.publish(topic, JSON.stringify(message), { qos: 2 }, (error) => {
+                mqttClient.client.publish(topic, JSON.stringify(message), { qos: 2 }, (error) => {
                     if (error) reject(error);
                     else resolve();
                 });
