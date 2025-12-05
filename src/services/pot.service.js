@@ -1,5 +1,4 @@
 const { PotModel, DetailPotModel, TypePotModel } = require("../models/pot.model");
-const mqttClient = require("../config/mqtt");
 const logger = require("../utils/logger");
 
 // Optimal parameters for soil health calculation
@@ -197,6 +196,8 @@ class PotService {
             // Publish to MQTT
             const topic = `potafull/${potId}/control`;
             const message = { watering: "ON" };
+
+            const mqttClient = require("../config/mqtt");
 
             // Ensure client is connected
             if (!mqttClient.isConnected) {
