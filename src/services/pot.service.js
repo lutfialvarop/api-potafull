@@ -189,7 +189,6 @@ class PotService {
     static async wateringControl(userId, potId) {
         try {
             // Check if pot belongs to user
-            console.log(potId);
             if (!potId) {
                 throw new Error("Pot ID is required.");
             }
@@ -202,6 +201,9 @@ class PotService {
             // Publish to MQTT
             const topic = `potafull/${potId}/control`;
             const message = { watering: "ON" };
+
+            // Move the require statement here to break the circular dependency
+            const mqttClient = require("../config/mqtt");
 
             // Ensure client is connected
             if (!mqttClient.isConnected) {
