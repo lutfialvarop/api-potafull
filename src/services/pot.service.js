@@ -192,8 +192,9 @@ class PotService {
             if (!potId) {
                 throw new Error("Pot ID is required.");
             }
-
+            console.log(potId);
             const pot = await PotModel.findByIdAndUserId(potId, userId);
+            console.log(pot);
             if (!pot) {
                 throw new Error("Pot tidak ditemukan atau bukan milik Anda");
             }
