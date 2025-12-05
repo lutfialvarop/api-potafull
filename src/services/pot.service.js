@@ -189,6 +189,7 @@ class PotService {
         try {
             // Check if pot belongs to user
             const pot_id = await TypePotModel.findById(potId);
+            console.log(pot_id);
             const pot = await PotModel.findByIdAndUserId(pot_id.pot_id, userId);
             console.log(pot, potId, userId);
             if (!pot) {
