@@ -189,7 +189,7 @@ class PotService {
         try {
             // Check if pot belongs to user
             const pot = await PotModel.findByIdAndUserId(potId, userId);
-            console.log(pot);
+            console.log(pot, potId, userId);
             if (!pot) {
                 throw new Error("Pot tidak ditemukan atau bukan milik Anda");
             }
