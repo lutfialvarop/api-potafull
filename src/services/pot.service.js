@@ -188,7 +188,8 @@ class PotService {
     static async wateringControl(userId, potId) {
         try {
             // Check if pot belongs to user
-            const pot = await PotModel.findByIdAndUserId(potId, userId);
+            const pot_id = await TypePotModel.findById(potId);
+            const pot = await PotModel.findByIdAndUserId(pot_id.pot_id, userId);
             console.log(pot, potId, userId);
             if (!pot) {
                 throw new Error("Pot tidak ditemukan atau bukan milik Anda");
