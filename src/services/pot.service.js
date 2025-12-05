@@ -189,6 +189,7 @@ class PotService {
         try {
             // Check if pot belongs to user
             const pot = await PotModel.findByIdAndUserId(potId, userId);
+            console.log(pot);
             if (!pot) {
                 throw new Error("Pot tidak ditemukan atau bukan milik Anda");
             }
@@ -205,7 +206,12 @@ class PotService {
             }
 
             // Publish using the client's publish method with Promise
-            await mqttClient.publish(topic, message, { qos: 2 });
+            await new Promise((resolve, reject) => {
+                mqttClient.publish(topic, JSON.stringify(message), { qos: 2 }, (error) => {
+                    if (error) reject(error);
+                    else resolve();
+                });
+            });
 
             logger.info("Watering control published", { userId, potId });
 
