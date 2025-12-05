@@ -198,16 +198,17 @@ class PotService {
             const topic = `potafull/${potId}/control`;
             const message = { watering: "ON" };
 
-            const mqttClient = require("../config/mqtt");
+            // Get MQTT client instance
+            const mqtt = require("../config/mqtt");
 
             // Ensure client is connected
-            if (!mqttClient.isConnected) {
+            if (!mqtt.isConnected) {
                 throw new Error("MQTT client is not connected");
             }
 
             // Publish using the client's publish method with Promise
             await new Promise((resolve, reject) => {
-                mqttClient.publish(topic, JSON.stringify(message), { qos: 2 }, (error) => {
+                mqtt.client.publish(topic, JSON.stringify(message), { qos: 2 }, (error) => {
                     if (error) reject(error);
                     else resolve();
                 });
