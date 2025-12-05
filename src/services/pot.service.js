@@ -227,6 +227,11 @@ class PotService {
     static async saveSensorData(potId, sensorData) {
         try {
             // Check if pot exists
+            console.log(potId);
+            if (!potId) {
+                throw new Error("Pot ID is required.");
+            }
+
             const pot = await PotModel.findById(potId);
             if (!pot) {
                 logger.warn("Pot not found, ignoring data", { potId });
