@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger");
 const routes = require("./routes");
 const errorMiddleware = require("./middlewares/error.middleware");
 
@@ -11,6 +13,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
+
+// Swagger UI
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explorer: true }));
 
 // Routes
 app.use("/api", routes);

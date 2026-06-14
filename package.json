@@ -26,6 +26,7 @@
         "mqtt": "^5.14.1",
         "node-pg-migrate": "^8.0.3",
         "pg": "^8.16.3",
+        "swagger-ui-express": "^4.6.3",
         "uuid": "^13.0.0"
     },
     "devDependencies": {
