@@ -11,7 +11,7 @@ COPY package*.json ./
 
 # 4. Install dependencies aplikasi
 # Gunakan 'npm ci' jika untuk production, atau 'npm install' untuk development
-RUN npm install
+RUN npm ci
 
 # 5. Salin seluruh kode source code aplikasi dari lokal ke dalam container
 COPY . .
